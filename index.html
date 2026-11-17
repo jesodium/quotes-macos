@@ -60,6 +60,7 @@
     .dl .apple { width: 2.2em; height: 2.2em; margin: 0; }
     .dl b { font-size: 1.25em; font-weight: 600; line-height: 1.15; }
     .dl span { display: block; opacity: .55; margin-top: .3em; }
+    .dl em { font-style: normal; display: block; }
     @media (max-width: 640px) {
       body { grid-template-rows: auto minmax(0, calc((100vw - 32px) * 752 / 364)) auto; }
       .widgets {
@@ -83,7 +84,7 @@
 
   <header>
     <a class="name" href="#">quotes<small>by jesodium</small></a>
-    <nav><a href="#features">features</a><span>|</span><a href="https://github.com/jesodium/quotes-macos/releases/latest"><svg class="apple"><use href="#apple"/></svg>download for mac</a></nav>
+    <nav><a href="#features">features</a><span>|</span><a href="https://github.com/jesodium/quotes-macos/releases/latest/download/Quotes.zip"><svg class="apple"><use href="#apple"/></svg>download for mac</a></nav>
   </header>
 
   <div class="stage">
@@ -91,7 +92,7 @@
       <img class="small" src="img/small-0.png" alt="small quotes widget">
       <img class="medium" src="img/medium-0.png" alt="medium quotes widget">
       <img class="large" src="img/large-0.png" alt="large quotes widget">
-      <a class="dl" href="https://github.com/jesodium/quotes-macos/releases/latest"><svg class="apple"><use href="#apple"/></svg><div><b>download for mac</b><span>macos 15+</span></div></a>
+      <a class="dl" href="https://github.com/jesodium/quotes-macos/releases/latest/download/Quotes.zip"><svg class="apple"><use href="#apple"/></svg><div><b>download for mac</b><span>macos 15+<em id="count"></em></span></div></a>
     </div>
   </div>
 
@@ -107,6 +108,14 @@
 
   <script>
     // 3 rendered quotes per size, pick one at random each load
+    // IMPORTANT NOTE: unauthenticated github api, 60 req/hr per visitor ip; counter just stays hidden if it fails
+    fetch("https://api.github.com/repos/jesodium/quotes-macos/releases")
+      .then(r => r.json())
+      .then(rs => {
+        const n = rs.flatMap(r => r.assets).reduce((t, a) => t + a.download_count, 0);
+        document.getElementById("count").textContent = `${n.toLocaleString()} download${n == 1 ? "" : "s"}`;
+      })
+      .catch(() => {});
     document.querySelectorAll(".widgets img").forEach(img => img.src = `img/${img.className}-${Math.floor(Math.random() * 3)}.png`);
   </script>
 </body>
