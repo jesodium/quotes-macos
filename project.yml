@@ -1,0 +1,39 @@
+name: Quotes
+options:
+  bundleIdPrefix: lol.karambit
+  deploymentTarget:
+    macOS: "15.0"
+settings:
+  DEVELOPMENT_TEAM: TPRJDMRK64
+  CODE_SIGN_STYLE: Automatic
+  MARKETING_VERSION: "1.0"
+  CURRENT_PROJECT_VERSION: "1"
+targets:
+  Quotes:
+    type: application
+    platform: macOS
+    sources: [App]
+    info:
+      path: App/Info.plist
+      properties:
+        LSUIElement: true
+    entitlements:
+      path: App/Quotes.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+    dependencies:
+      - target: QuotesWidget
+  QuotesWidget:
+    type: app-extension
+    platform: macOS
+    sources: [Widget]
+    info:
+      path: Widget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widget/QuotesWidget.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
